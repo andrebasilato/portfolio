@@ -1,27 +1,20 @@
-export interface Project {
-  id: string;
-  title: string;
-  description: string;
+import type { NavKey, ProjectId } from "@/lib/i18n";
+
+/** Locale-neutral project data; title/description live in the i18n dictionaries. */
+export interface ProjectMeta {
+  id: ProjectId;
   tags: string[];
   gradient: string;
-  href: string;
-}
-
-export interface Experience {
-  id: string;
-  company: string;
-  role: string;
-  period: string;
-  description: string;
 }
 
 export interface SocialLink {
   label: string;
   href: string;
-  icon: "github" | "linkedin" | "email" | "twitter";
+  icon: "linkedin" | "whatsapp";
 }
 
+/** Nav labels live in the i18n dictionaries, keyed by `key`. */
 export interface NavItem {
-  label: string;
+  key: NavKey;
   href: string;
 }

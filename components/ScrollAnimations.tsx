@@ -1,7 +1,50 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { useRef, type ReactNode } from "react";
+
+interface ParallaxProps {
+  children: ReactNode;
+  className?: string;
+  /** Total drift in px: element moves from +distance to -distance as it crosses the viewport. */
+  distance?: number;
+}
+
+/**
+ * Subtle scroll-linked parallax. Maps the element's viewport progress
+ * ("start end" -> "end start") to a compositor-only translateY.
+ * Disabled entirely when the user prefers reduced motion.
+ */
+export function Parallax({
+  children,
+  className = "",
+  distance = 35,
+}: ParallaxProps): React.JSX.Element {
+  const ref = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [distance, -distance]);
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      style={prefersReducedMotion ? undefined : { y }}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -20,6 +63,7 @@ export function ScrollReveal({
 }: ScrollRevealProps): React.JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, margin: "-80px" });
+  const prefersReducedMotion = useReducedMotion();
 
   const directionOffset = {
     up: { y: 60, x: 0 },
@@ -27,6 +71,12 @@ export function ScrollReveal({
     left: { x: 60, y: 0 },
     right: { x: -60, y: 0 },
   };
+
+  // Reduced motion: skip the entrance animation entirely — content must
+  // never be hidden behind an opacity-0 initial state.
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div
@@ -65,13 +115,16 @@ export function StaggerContainer({
 }: StaggerContainerProps): React.JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      // Reduced motion: start (and stay) in the "visible" variant so
+      // stagger children render fully visible with no entrance animation.
+      initial={prefersReducedMotion ? "visible" : "hidden"}
+      animate={prefersReducedMotion || isInView ? "visible" : "hidden"}
       variants={{
         hidden: {},
         visible: {

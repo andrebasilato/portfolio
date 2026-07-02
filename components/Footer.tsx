@@ -1,9 +1,11 @@
 "use client";
 
 import { SITE_CONFIG, NAV_ITEMS } from "@/lib/constants";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Footer(): React.JSX.Element {
   const currentYear = new Date().getFullYear();
+  const { t } = useLanguage();
 
   return (
     <footer className="relative border-t border-[var(--color-border)] px-6 py-12 [html[data-theme=light]_&]:border-[var(--color-light-border)]">
@@ -42,7 +44,7 @@ export default function Footer(): React.JSX.Element {
                 href={item.href}
                 className="text-sm text-[var(--color-text-secondary)] transition-colors duration-300 hover:text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-text-secondary)] [html[data-theme=light]_&]:hover:text-[var(--color-light-accent)]"
               >
-                {item.label}
+                {t.nav[item.key]}
               </a>
             ))}
           </nav>

@@ -2,32 +2,35 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { EXPERIENCES } from "@/lib/constants";
-import { ScrollReveal } from "./ScrollAnimations";
+import { useLanguage } from "@/components/LanguageProvider";
+import { Parallax, ScrollReveal } from "./ScrollAnimations";
 
 export default function Experience(): React.JSX.Element {
-  const [activeId, setActiveId] = useState<string>(EXPERIENCES[0].id);
+  const { t } = useLanguage();
+  const [activeId, setActiveId] = useState<string>(t.experience.items[0].id);
 
   return (
     <section id="experience" className="relative px-6 py-32">
       <div className="mx-auto max-w-7xl">
-        <ScrollReveal>
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-accent)]">
-            Career
-          </p>
-          <h2 className="mb-16 text-[clamp(2rem,5vw,4rem)] font-bold leading-[1.1] tracking-tight text-[var(--color-text-primary)] [html[data-theme=light]_&]:text-[var(--color-light-text-primary)]">
-            Experience
-            <span className="text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-accent)]">
-              .
-            </span>
-          </h2>
-        </ScrollReveal>
+        <Parallax distance={35}>
+          <ScrollReveal>
+            <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-accent)]">
+              {t.experience.label}
+            </p>
+            <h2 className="mb-16 text-[clamp(2rem,5vw,4rem)] font-bold leading-[1.1] tracking-tight text-[var(--color-text-primary)] [html[data-theme=light]_&]:text-[var(--color-light-text-primary)]">
+              {t.experience.heading}
+              <span className="text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-accent)]">
+                .
+              </span>
+            </h2>
+          </ScrollReveal>
+        </Parallax>
 
         <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16">
           {/* Left: Company list */}
           <ScrollReveal>
             <div className="flex flex-col gap-1">
-              {EXPERIENCES.map((exp) => (
+              {t.experience.items.map((exp) => (
                 <button
                   key={exp.id}
                   onClick={() => setActiveId(exp.id)}
@@ -70,7 +73,9 @@ export default function Experience(): React.JSX.Element {
           <ScrollReveal delay={0.2}>
             <div className="relative min-h-[250px] rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-card)] p-8 lg:p-12 [html[data-theme=light]_&]:border-[var(--color-light-border)] [html[data-theme=light]_&]:bg-[var(--color-light-bg-card)]">
               <AnimatePresence mode="wait">
-                {EXPERIENCES.filter((e) => e.id === activeId).map((exp) => (
+                {t.experience.items
+                  .filter((e) => e.id === activeId)
+                  .map((exp) => (
                   <motion.div
                     key={exp.id}
                     initial={{ opacity: 0, y: 20 }}

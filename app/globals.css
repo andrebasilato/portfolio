@@ -75,6 +75,14 @@ body {
   animation: marquee 25s linear infinite;
 }
 
+/* Respect reduced motion at the CSS level so the marquee is static
+   even during SSR/pre-hydration, before any JS runs. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}
+
 /* Noise texture overlay */
 .noise-overlay::before {
   content: "";

@@ -2,10 +2,18 @@
 
 import { motion } from "framer-motion";
 import { SKILLS } from "@/lib/constants";
-import { ScrollReveal, StaggerContainer, staggerItemVariants } from "./ScrollAnimations";
+import { useLanguage } from "@/components/LanguageProvider";
+import {
+  Parallax,
+  ScrollReveal,
+  StaggerContainer,
+  staggerItemVariants,
+} from "./ScrollAnimations";
 import MarqueeText from "./MarqueeText";
 
 export default function Skills(): React.JSX.Element {
+  const { t } = useLanguage();
+
   return (
     <section className="relative py-32">
       {/* Marquee banner */}
@@ -17,17 +25,19 @@ export default function Skills(): React.JSX.Element {
       </div>
 
       <div className="mx-auto max-w-7xl px-6">
-        <ScrollReveal>
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-accent)]">
-            Expertise
-          </p>
-          <h2 className="mb-16 text-[clamp(2rem,5vw,4rem)] font-bold leading-[1.1] tracking-tight text-[var(--color-text-primary)] [html[data-theme=light]_&]:text-[var(--color-light-text-primary)]">
-            Tech Stack
-            <span className="text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-accent)]">
-              .
-            </span>
-          </h2>
-        </ScrollReveal>
+        <Parallax distance={35}>
+          <ScrollReveal>
+            <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-accent)]">
+              {t.skills.label}
+            </p>
+            <h2 className="mb-16 text-[clamp(2rem,5vw,4rem)] font-bold leading-[1.1] tracking-tight text-[var(--color-text-primary)] [html[data-theme=light]_&]:text-[var(--color-light-text-primary)]">
+              {t.skills.heading}
+              <span className="text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-accent)]">
+                .
+              </span>
+            </h2>
+          </ScrollReveal>
+        </Parallax>
 
         <StaggerContainer className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
           {SKILLS.map((skill) => (

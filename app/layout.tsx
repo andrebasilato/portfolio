@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
+import LanguageProvider from "@/components/LanguageProvider";
+import { pt } from "@/lib/i18n";
 import "./globals.css";
 
 const inter = Inter({
@@ -10,24 +12,27 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Andre Basilato | Full Stack Developer",
-  description:
-    "Full Stack Developer crafting performant, elegant digital experiences with modern web technologies.",
+  title: pt.meta.title,
+  description: pt.meta.description,
   keywords: [
-    "Full Stack Developer",
-    "React",
-    "Next.js",
+    "Engenheiro Full-Stack",
+    "Tech Lead",
+    "Fintech",
+    "SaaS",
+    "Pagamentos",
+    "PIX",
+    "CNAB",
     "TypeScript",
-    "Web Developer",
+    "Node.js",
+    "React Native",
     "Andre Basilato",
   ],
   authors: [{ name: "Andre Basilato" }],
   openGraph: {
-    title: "Andre Basilato | Full Stack Developer",
-    description:
-      "Full Stack Developer crafting performant, elegant digital experiences with modern web technologies.",
+    title: pt.meta.title,
+    description: pt.meta.description,
     type: "website",
-    locale: "en_US",
+    locale: "pt_BR",
   },
   robots: {
     index: true,
@@ -41,9 +46,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>): React.JSX.Element {
   return (
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
+    <html lang="pt-BR" suppressHydrationWarning className={inter.variable}>
       <body className="noise-overlay font-[var(--font-inter)]">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <LanguageProvider>{children}</LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

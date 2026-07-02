@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
+import { useLanguage } from "@/components/LanguageProvider";
 
 export default function Header(): React.JSX.Element {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
   const { theme, setTheme } = useTheme();
+  const { locale, setLocale, t } = useLanguage();
 
   useEffect(() => {
     setMounted(true);
@@ -22,6 +24,10 @@ export default function Header(): React.JSX.Element {
 
   const toggleTheme = (): void => {
     setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const toggleLocale = (): void => {
+    setLocale(locale === "pt-BR" ? "en" : "pt-BR");
   };
 
   return (
@@ -55,44 +61,53 @@ export default function Header(): React.JSX.Element {
                 href={item.href}
                 className="text-sm text-[var(--color-text-secondary)] transition-colors duration-300 hover:text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-text-secondary)] [html[data-theme=light]_&]:hover:text-[var(--color-light-accent)]"
               >
-                {item.label}
+                {t.nav[item.key]}
               </a>
             ))}
             {mounted && (
-              <button
-                onClick={toggleTheme}
-                className="rounded-full p-2 text-[var(--color-text-secondary)] transition-colors duration-300 hover:text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-text-secondary)] [html[data-theme=light]_&]:hover:text-[var(--color-light-accent)]"
-                aria-label="Toggle theme"
-              >
-                {theme === "dark" ? (
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="5" />
-                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-                  </svg>
-                ) : (
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                  </svg>
-                )}
-              </button>
+              <>
+                <button
+                  onClick={toggleLocale}
+                  className="rounded-full p-2 text-sm font-medium text-[var(--color-text-secondary)] transition-colors duration-300 hover:text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-text-secondary)] [html[data-theme=light]_&]:hover:text-[var(--color-light-accent)]"
+                  aria-label={t.header.switchLanguage}
+                >
+                  {locale === "pt-BR" ? "EN" : "PT"}
+                </button>
+                <button
+                  onClick={toggleTheme}
+                  className="rounded-full p-2 text-[var(--color-text-secondary)] transition-colors duration-300 hover:text-[var(--color-accent)] [html[data-theme=light]_&]:text-[var(--color-light-text-secondary)] [html[data-theme=light]_&]:hover:text-[var(--color-light-accent)]"
+                  aria-label={t.header.toggleTheme}
+                >
+                  {theme === "dark" ? (
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <circle cx="12" cy="12" r="5" />
+                      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                    </svg>
+                  ) : (
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                  )}
+                </button>
+              </>
             )}
           </div>
 
@@ -100,7 +115,7 @@ export default function Header(): React.JSX.Element {
           <button
             className="relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={t.header.toggleMenu}
           >
             <motion.span
               className="block h-0.5 w-6 bg-[var(--color-text-primary)] [html[data-theme=light]_&]:bg-[var(--color-light-text-primary)]"
@@ -142,19 +157,30 @@ export default function Header(): React.JSX.Element {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
                 >
-                  {item.label}
+                  {t.nav[item.key]}
                 </motion.a>
               ))}
               {mounted && (
-                <motion.button
-                  onClick={toggleTheme}
-                  className="mt-4 rounded-full border border-[var(--color-border)] px-6 py-2 text-sm text-[var(--color-text-secondary)] [html[data-theme=light]_&]:border-[var(--color-light-border)] [html[data-theme=light]_&]:text-[var(--color-light-text-secondary)]"
+                <motion.div
+                  className="mt-4 flex items-center gap-4"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
                 >
-                  {theme === "dark" ? "Light Mode" : "Dark Mode"}
-                </motion.button>
+                  <button
+                    onClick={toggleTheme}
+                    className="rounded-full border border-[var(--color-border)] px-6 py-2 text-sm text-[var(--color-text-secondary)] [html[data-theme=light]_&]:border-[var(--color-light-border)] [html[data-theme=light]_&]:text-[var(--color-light-text-secondary)]"
+                  >
+                    {theme === "dark" ? t.header.lightMode : t.header.darkMode}
+                  </button>
+                  <button
+                    onClick={toggleLocale}
+                    className="rounded-full border border-[var(--color-border)] px-6 py-2 text-sm text-[var(--color-text-secondary)] [html[data-theme=light]_&]:border-[var(--color-light-border)] [html[data-theme=light]_&]:text-[var(--color-light-text-secondary)]"
+                    aria-label={t.header.switchLanguage}
+                  >
+                    {t.header.languageName}
+                  </button>
+                </motion.div>
               )}
             </nav>
           </motion.div>
